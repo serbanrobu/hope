@@ -1,0 +1,59 @@
+module Context where
+
+-- import Ast (Ast (..))
+-- import Data.List (findIndex)
+-- import Relude
+--
+-- type Context = [(Text, Ast, Maybe Ast)]
+--
+-- getType :: Ast -> StateT Context (Either Text) Ast
+-- getType (App f x) =
+--   getType f
+--     >>= ( \case
+--             (Pi _ _ b) -> do
+--               _ <- getType x
+--               pure . shift 0 (-1) $ substitute 0 (shift 0 1 x) b
+--             o -> do
+--               ctx <- get
+--               lift $ Left $ "Expecting a function, found: " <> show f <> " : " <> show o <> " | " <> show ctx
+--         )
+-- getType (Lam m t b) = do
+--   _ <- getType t
+--   whenJust m $ \v -> modify ((v, t, Nothing) :)
+--   b' <- getType b
+--   pure $ Pi m t b'
+-- getType (Pi m t b) = do
+--   _ <- getType t
+--   whenJust m $ \v -> modify ((v, t, Nothing) :)
+--   _ <- getType b
+--   pure Unknown
+-- getType Unknown = pure Unknown
+-- getType (Var v m) = do
+--   ctx <- get
+--   i <-
+--     lift
+--       . maybeToRight "Not found in context"
+--       $ m <|> findIndex (\(v', _, _) -> v' == v) ctx
+--   (_, t, _) <-
+--     lift
+--       . maybeToRight "Index out of bounds"
+--       $ ctx !!? i
+--   pure $ shift 0 (i + 1) t
+--
+-- shift :: Int -> Int -> Ast -> Ast
+-- shift c d (App f x) = App (shift c d f) $ shift c d x
+-- shift c d (Lam Nothing t b) = Lam Nothing (shift c d t) $ shift c d b
+-- shift c d (Lam m t b) = Lam m (shift c d t) $ shift (c + 1) d b
+-- shift c d (Pi Nothing t b) = Pi Nothing (shift c d t) $ shift c d b
+-- shift c d (Pi m t b) = Pi m (shift c d t) $ shift (c + 1) d b
+-- shift c d t@(Var v (Just i)) = if i < c then t else Var v . Just $ i + d
+-- shift _ _ t = t
+--
+-- substitute :: Int -> Ast -> Ast -> Ast
+-- substitute i a (App f x) = App (substitute i a f) $ substitute i a x
+-- substitute i a (Lam Nothing t b) = Lam Nothing (substitute i a t) $ substitute i a b
+-- substitute i a (Lam m t b) = Lam m (substitute i a t) $ substitute (i + 1) (shift 0 1 a) b
+-- substitute i a (Pi Nothing t b) = Pi Nothing (substitute i a t) $ substitute i a b
+-- substitute i a (Pi m t b) = Pi m (substitute i a t) $ substitute (i + 1) (shift 0 1 a) b
+-- substitute i a t@(Var _ (Just i')) = if i' == i then a else t
+-- substitute _ _ t = t

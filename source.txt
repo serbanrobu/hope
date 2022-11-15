@@ -1,0 +1,11 @@
+-- Π A B C. (B → C) → (A → B) → A → C
+λ A B C (bc : B → C) (ab : A → B) (a : A). bc (ab a)
+
+-- Π (Pair : ? → ? → ?) (pair : Π A B. A → B → Pair A B) (fst : Π A. Pair A ? → A) (snd : Π B. Pair ? B → B) A B. Pair A B → Pair B A
+-- λ (Pair : ? → ? → ?) (pair : Π A B. A → B → Pair A B) (fst : Π A. Pair A ? → A) (snd : Π B. Pair ? B → B) A B (p : Pair A B). pair B A (snd B p) (fst A p)
+
+-- Π P Q. (P → Q) → Not Q → Not P
+-- λ P Q (pq : P → Q) (nq : Not Q) (p : P). nq (pq p)
+
+-- Π A. A → A
+-- λ A (a : A). a
